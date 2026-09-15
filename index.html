@@ -40,6 +40,56 @@
   .subtitle{font-size:10.5px;letter-spacing:2px;color:var(--khaki-dim);margin-top:5px;}
   .credit-tag{font-family:"Big Shoulders Stencil Text",sans-serif;font-size:13px;letter-spacing:1.5px;color:var(--amber-dim);border:1px solid var(--line);padding:5px 10px;white-space:nowrap;}
 
+  .hdr-right{display:flex;align-items:center;gap:9px;}
+  .help-btn{
+    background:transparent;border:1px solid var(--amber-dim);color:var(--amber);
+    font-family:"Big Shoulders Stencil Text",sans-serif;font-size:13px;letter-spacing:1.5px;
+    padding:6px 12px;cursor:pointer;transition:all .12s;white-space:nowrap;
+  }
+  .help-btn:hover{background:var(--amber);color:#14150f;border-color:var(--amber);}
+
+  .modal-back{
+    position:fixed;inset:0;background:rgba(8,9,5,.82);z-index:60;
+    display:none;align-items:center;justify-content:center;padding:18px;
+  }
+  .modal-back.show{display:flex;}
+  .modal{
+    background:var(--panel);border:1px solid var(--khaki-dim);max-width:720px;width:100%;
+    max-height:88vh;display:flex;flex-direction:column;position:relative;
+  }
+  .modal-head{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:15px 18px;border-bottom:1px solid var(--line);flex:none;
+  }
+  .modal-head h2{
+    font-family:"Big Shoulders Stencil Text",sans-serif;font-size:22px;letter-spacing:1px;
+    color:var(--amber);margin:0;
+  }
+  .modal-close{
+    background:transparent;border:1px solid var(--line);color:var(--khaki);
+    font-family:"JetBrains Mono",monospace;font-size:14px;padding:5px 11px;cursor:pointer;
+  }
+  .modal-close:hover{border-color:var(--red);color:var(--red);}
+  .modal-body{padding:16px 18px 20px;overflow-y:auto;font-size:12.5px;line-height:1.65;}
+  .modal-body h3{
+    font-family:"Big Shoulders Stencil Text",sans-serif;font-size:15px;letter-spacing:1.2px;
+    color:var(--amber);margin:20px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line);
+  }
+  .modal-body h3:first-child{margin-top:0;}
+  .modal-body p{margin:0 0 9px;color:var(--khaki);}
+  .modal-body ol,.modal-body ul{margin:0 0 10px;padding-left:19px;color:var(--khaki);}
+  .modal-body li{margin-bottom:5px;}
+  .modal-body b{color:var(--amber);font-weight:700;}
+  .modal-body .quick{border:1px solid var(--amber-dim);padding:11px 14px;margin-bottom:6px;}
+  .modal-body .note{
+    border-left:2px solid var(--khaki-dim);padding:2px 0 2px 11px;margin:10px 0;
+    color:var(--khaki-dim);font-size:11.5px;
+  }
+  .modal-body table{border-collapse:collapse;width:100%;margin:8px 0 12px;font-size:11.5px;}
+  .modal-body th,.modal-body td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:var(--khaki);}
+  .modal-body th{color:var(--khaki-dim);font-weight:400;letter-spacing:.5px;}
+  .modal-body code{color:var(--amber);font-size:11.5px;}
+
   .tabs-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
   .tab-box{position:relative;flex:1;min-width:250px;border:1px solid var(--line);padding:13px 10px 10px;}
   .tab-box.wide{flex:1.35;}
@@ -204,7 +254,10 @@
       <h1>FIRE DIRECTION</h1>
       <div class="subtitle">WARDOGS ARTILLERY SOLVER</div>
     </div>
-    <div class="credit-tag">CREATED BY CAPTAINFAISAL</div>
+    <div class="hdr-right">
+      <button class="help-btn" id="helpBtn">? GUIDE</button>
+      <div class="credit-tag">CREATED BY CAPTAINFAISAL</div>
+    </div>
   </header>
 
   <div class="tabs-row">
@@ -312,6 +365,99 @@
       <div class="btn-row">
         <button class="fire-btn" id="copyBtn">COPY FIRE MISSION</button>
         <button class="fire-btn reset" id="resetBtn">RESET MAP</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal-back" id="helpModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>HOW TO USE</h2>
+        <button class="modal-close" id="helpClose">CLOSE ✕</button>
+      </div>
+      <div class="modal-body">
+
+        <div class="quick">
+          <b>THE 30-SECOND VERSION</b>
+          <ol style="margin-top:7px;margin-bottom:0">
+            <li>Pick your <b>map</b> and <b>artillery type</b> at the top.</li>
+            <li><b>Click where your gun is</b> on the map.</li>
+            <li><b>Click your target.</b></li>
+            <li>Dial in the <b>Azimuth</b> and <b>Mil</b> it gives you.</li>
+          </ol>
+        </div>
+        <p style="color:var(--khaki-dim);font-size:11.5px">That's the whole tool. The rest is extra.</p>
+
+        <h3>1 · Pick map and weapon</h3>
+        <p>Range rings and firing solutions change per weapon, so set this first.</p>
+        <table>
+          <tr><th></th><th>L81 Mortar</th><th>SPH-2</th></tr>
+          <tr><td>Range</td><td>132–684 m</td><td>780–2,629 m</td></tr>
+          <tr><td>Arcs</td><td>One</td><td>Low and High</td></tr>
+        </table>
+
+        <h3>2 · Place your gun</h3>
+        <p>Click once where your gun actually is. You get a yellow crosshair plus <b>range rings</b> — inside the inner ring is too close, outside the outer ring is too far.</p>
+        <div class="note">The SPH-2 also gets a dashed ring at 1,181 m. Inside that, only the HIGH arc works.</div>
+
+        <h3>3 · Place your target</h3>
+        <p>Click again where you want the shells to land. The tool switches from gun to target automatically, so two clicks is all it takes.</p>
+        <p><b>Drag</b> either marker to adjust — numbers update live. To re-place one deliberately, press <b>⌖ GUN</b> or <b>✕ TARGET</b> above the map first.</p>
+
+        <h3>4 · Read the solution</h3>
+        <ul>
+          <li><b>DISTANCE</b> — meters. This is your RNG number.</li>
+          <li><b>AZIMUTH</b> — compass bearing. Traverse the tube to this.</li>
+          <li><b>MIL</b> — elevation to dial in.</li>
+        </ul>
+        <p>In game: enter the mortar (<code>E</code>), traverse until the compass matches the azimuth, set the RNG/mil, then fire one ranging shell.</p>
+        <p><b>COPY FIRE MISSION</b> copies it all as text for squad chat.</p>
+
+        <h3>5 · Mark the Control Zone</h3>
+        <p>Press <b>◎ CZ</b>, then click where the zone is this match. You get a true-scale circle you can drag. Press <b>◎ CZ</b> again to remove it.</p>
+        <div class="note">With the CZ and your range rings both showing, you can see whether a firing position covers the zone before you build there.</div>
+
+        <h3>6 · Fix a miss</h3>
+        <p>Firing tables assume flat ground, and the maps aren't flat — uphill lands short, downhill lands long. Fire <b>one</b> shell, watch it land, then correct:</p>
+        <ol>
+          <li>Pick <b>SHORT</b> or <b>LONG</b>, type the meters off.</li>
+          <li>Pick <b>LEFT</b> or <b>RIGHT</b>, type the sideways error.</li>
+          <li>Press <b>CORRECT</b> — you get a corrected azimuth and mil.</li>
+        </ol>
+
+        <h3>7 · Save targets</h3>
+        <p>Place a target, type a name in <b>SAVED TARGETS</b>, press <b>SAVE</b>. Click any saved target later to instantly re-aim at it. Press <b>✕</b> to delete one.</p>
+
+        <h3>8 · Mark enemies</h3>
+        <p><b>Right-click the map</b> (phone: <b>press and hold</b>) to open the marker menu — tanks, APCs, infantry, artillery, helis, FOBs, LZs, supply, danger. Each uses the game's own icon.</p>
+        <p>To remove one: right-click or hold <b>on it</b> → <b>REMOVE MARKER</b>.</p>
+
+        <h3>9 · New match</h3>
+        <p>Press <b>RESET MAP</b>, then again to confirm. Clears gun, target, CZ and enemy markers. Saved targets stay.</p>
+
+        <h3>Map controls</h3>
+        <table>
+          <tr><th>Action</th><th>PC</th><th>Phone</th></tr>
+          <tr><td>Move</td><td>Drag</td><td>Drag</td></tr>
+          <tr><td>Zoom</td><td>Scroll</td><td>Pinch</td></tr>
+          <tr><td>Place marker</td><td>Left-click</td><td>Tap</td></tr>
+          <tr><td>Marker menu</td><td>Right-click</td><td>Hold</td></tr>
+        </table>
+        <p><b>☀ slider</b> brightens dark terrain. <b>TOPO/TERRAIN</b> switches to contour lines — useful for seeing whether your target is uphill or downhill.</p>
+
+        <h3>Worth knowing</h3>
+        <ul>
+          <li><b>Always fire one ranging shell first.</b> One correction beats a perfect calculation onto a hillside.</li>
+          <li><b>Level your SPH-2.</b> Park it on a slope and the elevation you dialled isn't the one you get.</li>
+          <li><b>Spread is normal.</b> Shells land in a group that widens with range — that's the weapon, not your math.</li>
+          <li><b>Everything saves automatically</b> in your own browser. Close the tab, come back, it's still there.</li>
+        </ul>
+
+        <p style="color:var(--khaki-dim);font-size:11px;margin-top:16px;border-top:1px solid var(--line);padding-top:10px">
+          Firing tables are community-measured and can change with patches. Terrain and ballistics data from the open-source wardogs-calculator project by Apollyon (MIT). Unofficial fan tool, not affiliated with BULKHEAD or Team17.
+        </p>
+
       </div>
     </div>
   </div>
@@ -1048,6 +1194,15 @@ function applyBri(){
   document.getElementById("world").style.setProperty("--map-bri", v);
 }
 
+/* ============ GUIDE MODAL ============ */
+const helpModal=document.getElementById("helpModal");
+function openHelp(){ helpModal.classList.add("show"); }
+function closeHelp(){ helpModal.classList.remove("show"); }
+document.getElementById("helpBtn").addEventListener("click",openHelp);
+document.getElementById("helpClose").addEventListener("click",closeHelp);
+helpModal.addEventListener("click",ev=>{ if(ev.target===helpModal) closeHelp(); });
+document.addEventListener("keydown",ev=>{ if(ev.key==="Escape") closeHelp(); });
+
 /* ============ RESET ============ */
 let resetTimer=null;
 const resetBtn=document.getElementById("resetBtn");
@@ -1071,7 +1226,7 @@ const STORAGE_KEY="fdc-v2-state";
 let saveTimer=null;
 function scheduleSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(persist,500); }
 async function persist(){
-  const payload=JSON.stringify({mapId:state.mapId,weaponId:state.weaponId,perMap:state.perMap,saved:state.saved,bri:state.bri});
+  const payload=JSON.stringify({mapId:state.mapId,weaponId:state.weaponId,perMap:state.perMap,saved:state.saved,bri:state.bri,seenGuide:state.seenGuide});
   try{ if(window.storage&&window.storage.set){ await window.storage.set(STORAGE_KEY,payload,false); return; } }catch(e){}
   try{ localStorage.setItem(STORAGE_KEY,payload); }catch(e){}
 }
@@ -1087,6 +1242,7 @@ async function restore(){
     if(p.perMap) state.perMap=p.perMap;
     if(p.saved) state.saved=p.saved;
     if(p.bri) state.bri=p.bri;
+    if(p.seenGuide) state.seenGuide=true;
   }catch(e){}
 }
 
@@ -1098,6 +1254,7 @@ window.addEventListener("resize", ()=>{ fitView(); });
   if(e.gun) placeMode="target";
   applyBri();
   loadMap();
+  if(!state.seenGuide){ openHelp(); state.seenGuide=true; scheduleSave(); }
 })();
 </script>
 
