@@ -166,6 +166,10 @@
   }
   .fire-btn:hover{border-color:var(--amber);color:var(--amber);}
   .fire-btn.copied{border-color:var(--green);color:var(--green);}
+  .btn-row .fire-btn{flex:1;}
+  .fire-btn.reset{flex:0 0 34%;border-color:rgba(228,87,61,.55);color:var(--red);}
+  .fire-btn.reset:hover{border-color:var(--red);}
+  .fire-btn.reset.arm{background:var(--red);color:#14150f;border-color:var(--red);font-weight:700;}
 
   .pin-picker{
     position:absolute;z-index:20;display:none;background:rgba(20,21,15,.97);
@@ -305,7 +309,10 @@
         <div class="tgt-list" id="tgtList"></div>
       </div>
 
-      <button class="fire-btn" id="copyBtn">COPY FIRE MISSION</button>
+      <div class="btn-row">
+        <button class="fire-btn" id="copyBtn">COPY FIRE MISSION</button>
+        <button class="fire-btn reset" id="resetBtn">RESET MAP</button>
+      </div>
     </div>
   </div>
 
@@ -1040,6 +1047,24 @@ function applyBri(){
   document.getElementById("briSlider").value = Math.round(v*100);
   document.getElementById("world").style.setProperty("--map-bri", v);
 }
+
+/* ============ RESET ============ */
+let resetTimer=null;
+const resetBtn=document.getElementById("resetBtn");
+resetBtn.addEventListener("click",()=>{
+  if(!resetBtn.classList.contains("arm")){
+    resetBtn.classList.add("arm"); resetBtn.textContent="CONFIRM?";
+    resetTimer=setTimeout(()=>{ resetBtn.classList.remove("arm"); resetBtn.textContent="RESET MAP"; },2600);
+    return;
+  }
+  clearTimeout(resetTimer);
+  resetBtn.classList.remove("arm"); resetBtn.textContent="RESET MAP";
+  const e=mapEntry();
+  e.gun=null; e.target=null; e.cz=null; e.pins=[];
+  correction=null; clearCorrInputs(); closePinPicker();
+  placeMode="gun";
+  refresh(); scheduleSave();
+});
 
 /* ============ PERSISTENCE ============ */
 const STORAGE_KEY="fdc-v2-state";
