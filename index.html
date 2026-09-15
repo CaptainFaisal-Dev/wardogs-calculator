@@ -637,10 +637,27 @@ function drawOverlay(){
   // range rings
   if(e.gun){
     const gp = gameToPx(e.gun);
-    WEAPONS[state.weaponId].rings.forEach(rg=>{
-      const attrs = {cx:gp.x,cy:gp.y,r:rg.m,fill:"none",stroke:"rgba(255,177,0,0.35)","stroke-width":1.4,"vector-effect":"non-scaling-stroke"};
-      if(rg.dash) attrs["stroke-dasharray"]="6 5";
-      el("circle",attrs,svg);
+    const rings = WEAPONS[state.weaponId].rings;
+    const maxR = Math.max(...rings.map(r=>r.m));
+    const minR = Math.min(...rings.filter(r=>!r.dash).map(r=>r.m));
+    // shade the band the gun can actually reach
+    el("path",{
+      d:`M ${gp.x} ${gp.y} m ${-maxR} 0 a ${maxR} ${maxR} 0 1 0 ${maxR*2} 0 a ${maxR} ${maxR} 0 1 0 ${-maxR*2} 0 `+
+        `M ${gp.x} ${gp.y} m ${-minR} 0 a ${minR} ${minR} 0 1 1 ${minR*2} 0 a ${minR} ${minR} 0 1 1 ${-minR*2} 0`,
+      "fill-rule":"evenodd", fill:"#ffb100", "fill-opacity":0.07, stroke:"none"
+    },svg);
+    rings.forEach(rg=>{
+      // dark casing first so the ring reads over bright and dark terrain alike
+      const casing = {cx:gp.x,cy:gp.y,r:rg.m,fill:"none",stroke:"rgba(0,0,0,0.65)","stroke-width":5,"vector-effect":"non-scaling-stroke"};
+      const line   = {cx:gp.x,cy:gp.y,r:rg.m,fill:"none",stroke:"#ffc21f","stroke-width":2.6,"vector-effect":"non-scaling-stroke"};
+      if(rg.dash){ casing["stroke-dasharray"]="10 7"; line["stroke-dasharray"]="10 7"; line.stroke="#ffd98a"; }
+      el("circle",casing,svg);
+      el("circle",line,svg);
+      // label the ring distance
+      const ly = gp.y - rg.m;
+      el("text",{x:gp.x,y:ly-5*inv,fill:"#ffc21f","font-size":fontS*0.95,"font-weight":"700","text-anchor":"middle",
+        stroke:"rgba(0,0,0,0.7)","stroke-width":3*inv,"paint-order":"stroke","font-family":"JetBrains Mono, monospace"},svg
+      ).textContent = rg.m+" m"+(rg.dash?" (LOW ARC)":"");
     });
   }
 
